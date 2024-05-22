@@ -1,0 +1,90 @@
+    if (searchName) {
+      const searchValue = new RegExp(searchName, "i");
+      query.$or = [{ folderName: searchValue }];
+    }
+
+
+
+----------------
+
+
+
+import { Button, InputAdornment, TextField } from "@mui/material";
+
+const [searchTerm, setSearchTerm] = useState("");
+const handleSearch = (value: any) => {
+try {
+setSearchTerm(value);
+} catch (error) {
+console.error("Error in handleSearch:", error);
+}
+};
+
+useEffect(() => {
+getUserSearchList();
+}, [searchTerm]);
+
+
+
+ const getUserSearchList = async () => {
+    const apiUrl = `${API_URL}/task/list?name=${searchTerm}&itemPerPage=${itemPerPage}`;
+    try {
+      const response = await axios.get(`${apiUrl}`);
+      setTaskList(response?.data?.data);
+    } catch (error: any) {
+      if (error.response) {
+        const errorMessage = error.response.data.message;
+        console.log(errorMessage);
+      } else {
+        console.log("An error occurred");
+      }
+    }
+  };
+
+
+
+<TextField
+  id="search"
+  type="search"
+  placeholder="Search"
+  value={searchTerm}
+  onChange={(e) => handleSearch(e.target.value)}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <i className="fa-solid fa-magnifying-glass"></i>
+      </InputAdornment>
+    ),
+  }}
+/>
+
+
+---------------------------------- Inbuilt Search -------------------------
+
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+   const handleSearch = (event) => {
+        const value = event.target.value;
+        setSearchTerm(value);
+        const filteredImages = images.filter(image =>
+            image.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setimages(filteredImages);
+    };
+
+
+     useEffect(() => {
+        if (searchTerm == '') {
+            getFolderListing()
+        }
+    }, [searchTerm])
+
+
+     <input
+        className="form-control"
+        placeholder="Search"
+        type="text"
+        value={searchTerm}
+        onChange={handleSearch}
+    />
